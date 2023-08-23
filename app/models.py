@@ -4,9 +4,8 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
+from . import Base
 
-class Base(DeclarativeBase):
-    pass
 
 class User(Base):
     __tablename__ = 'user'
