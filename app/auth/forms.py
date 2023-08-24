@@ -1,3 +1,4 @@
+from flask import g
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, EmailField, ValidationError
 from wtforms.validators import InputRequired, Length, EqualTo
@@ -52,7 +53,23 @@ class LoginForm(FlaskForm):
         if not user_with_username:
             raise ValidationError(message='This username was not found.')
         if not check_password_hash(user_with_username.password, field.data):
-            raise ValidationError(message='Wrong password')
+            raise ValidationError(message='Wrong password.')
 
-    def validate_nothing(self, field):
-        pass
+
+class ChangeUserForm(FlaskForm):
+    username = StringField(label='Username*:',
+                           validators=[InputRequired(),
+                                       Length(min=5, max=255)])
+    email = EmailField(label='Email*:', validators=[InputRequired(), Length(max=255)])
+
+    def validate_username(self, field):
+        current_user = g.user
+        user_with_username = get_user_with_username(username=field.data)
+        if user_with_username and (user_with_username != current_user):
+            raise ValidationError(message='A user with this username already exists.')
+        
+    def validate_email(self, field):
+        current_user = g.user
+        user_with_email = get_user_with_email(email=field.data)
+        if user_with_email and (user_with_email != current_user):
+            raise ValidationError(message='A user with this email already exists.')
