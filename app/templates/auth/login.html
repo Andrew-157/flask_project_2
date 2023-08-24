@@ -29,5 +29,9 @@
             <button type="submit" class="btn btn-primary btn-lg">Login</button>
         </div>
     </form>
+    <div class="text-center container py-5">
+        <p>Do not have an account?</p>
+        <a class="text-decoration-none" href="{{ url_for('auth.register') }}">Click here</a>
+    </div>
 </div>
 {% endblock %}
