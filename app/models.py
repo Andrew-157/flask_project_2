@@ -11,8 +11,9 @@ class User(Base):
     __tablename__ = 'user'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(length=255))
-    email: Mapped[str] = mapped_column(String(length=255))
+    username: Mapped[str] = mapped_column(String(length=255), unique=True)
+    email: Mapped[str] = mapped_column(String(length=255), unique=True)
+    password: Mapped[str] = mapped_column(String(length=300))
 
     def __repr__(self) -> str:
         return self.username

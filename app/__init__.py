@@ -19,9 +19,13 @@ def create_app(config_name: str = 'production'):
 
 
     from . import models
+    from .auth.urls import bp as auth_bp
+    from .main import routes as main_routes
 
     db.init_app(app)
     migrate.init_app(app, db)
 
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(main_routes.bp)
 
     return app
