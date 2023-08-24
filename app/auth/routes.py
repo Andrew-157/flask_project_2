@@ -64,3 +64,9 @@ class Login(MethodView):
             session['user_id'] = user.id
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
+    
+
+@bp.route(rule='/logout/')
+def logout():
+    session.clear()
+    return redirect(url_for('main.index'))
