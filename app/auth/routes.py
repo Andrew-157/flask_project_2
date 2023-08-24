@@ -9,7 +9,7 @@ from ..models import User
 from .forms import RegisterForm, LoginForm, ChangeUserForm
 from .crud import get_user_by_id, get_user_with_username
 
-bp = Blueprint(name='auth', 
+bp = Blueprint(name='auth',
                import_name=__name__,
                url_prefix='/auth')
 
@@ -44,11 +44,11 @@ class Register(MethodView):
     def get(self):
         form = self.form_class()
         return render_template(self.template_name, form=form)
-    
+
     def post(self):
         form = self.form_class(request.form)
         if form.validate_on_submit():
-            new_user = User(username=form.username.data, 
+            new_user = User(username=form.username.data,
                             email=form.email.data,
                             password=generate_password_hash(form.password1.data))
             db.session.add(new_user)
@@ -58,7 +58,7 @@ class Register(MethodView):
             flash(self.success_message, category='success')
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
-    
+
 
 class Login(MethodView):
     methods = ['GET', 'POST']
@@ -71,7 +71,7 @@ class Login(MethodView):
     def get(self):
         form = self.form_class()
         return render_template(self.template_name, form=form)
-    
+
     def post(self):
         form = self.form_class(request.form)
         if form.validate_on_submit():
@@ -81,7 +81,7 @@ class Login(MethodView):
             flash(self.success_message, category='success')
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
-    
+
 
 @bp.route(rule='/logout/')
 def logout():
@@ -104,7 +104,7 @@ class ChangeUser(MethodView):
         form = self.form_class(username=current_user.username,
                                email=current_user.email)
         return render_template(self.template_name, form=form)
-    
+
     def post(self):
         current_user: User = g.user
         form = self.form_class(request.form)
@@ -116,7 +116,7 @@ class ChangeUser(MethodView):
             flash(self.success_message, category='success')
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
-    
+
 
 @bp.route(rule='/authenticate/', methods=['GET'])
 def become_user():
