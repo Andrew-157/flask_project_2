@@ -1,6 +1,6 @@
 import functools
 
-from flask import Blueprint, render_template, request, redirect, url_for, g, session
+from flask import Blueprint, render_template, request, redirect, url_for, g, session, flash
 from flask.views import MethodView
 from werkzeug.security import generate_password_hash
 
@@ -39,6 +39,7 @@ class Register(MethodView):
     def __init__(self) -> None:
         self.form_class = RegisterForm
         self.template_name = 'auth/register.html'
+        self.success_message = 'You successfully registered.'
 
     def get(self):
         form = self.form_class()
@@ -54,6 +55,7 @@ class Register(MethodView):
             db.session.commit()
             session.clear()
             session['user_id'] = new_user.id
+            flash(self.success_message, category='success')
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
     
@@ -64,6 +66,7 @@ class Login(MethodView):
     def __init__(self) -> None:
         self.form_class = LoginForm
         self.template_name = 'auth/login.html'
+        self.success_message = 'Welcome Back!'
 
     def get(self):
         form = self.form_class()
@@ -75,6 +78,7 @@ class Login(MethodView):
             username = form.username.data
             user = get_user_with_username(username=username)
             session['user_id'] = user.id
+            flash(self.success_message, category='success')
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
     
@@ -82,6 +86,7 @@ class Login(MethodView):
 @bp.route(rule='/logout/')
 def logout():
     session.clear()
+    flash('You successfully logged out.', category='success')
     return redirect(url_for('main.index'))
 
 
@@ -92,6 +97,7 @@ class ChangeUser(MethodView):
     def __init__(self) -> None:
         self.form_class = ChangeUserForm
         self.template_name = 'auth/change_user.html'
+        self.success_message = 'You successfully updated your profile.'
 
     def get(self):
         current_user: User = g.user
@@ -107,6 +113,7 @@ class ChangeUser(MethodView):
             current_user.email = form.email.data
             db.session.add(current_user)
             db.session.commit()
+            flash(self.success_message, category='success')
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
     
