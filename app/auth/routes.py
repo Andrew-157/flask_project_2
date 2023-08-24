@@ -4,8 +4,8 @@ from werkzeug.security import generate_password_hash
 
 from .. import db
 from ..models import User
-from .forms import RegisterForm
-from .crud import get_user_by_id
+from .forms import RegisterForm, LoginForm
+from .crud import get_user_by_id, get_user_with_username
 
 bp = Blueprint(name='auth', 
                import_name=__name__,
@@ -41,5 +41,26 @@ class Register(MethodView):
             db.session.commit()
             session.clear()
             session['user_id'] = new_user.id
+            return redirect(url_for('main.index'))
+        return render_template(self.template_name, form=form)
+    
+
+class Login(MethodView):
+    methods = ['GET', 'POST']
+
+    def __init__(self) -> None:
+        self.form_class = LoginForm
+        self.template_name = 'auth/login.html'
+
+    def get(self):
+        form = self.form_class()
+        return render_template(self.template_name, form=form)
+    
+    def post(self):
+        form = self.form_class(request.form)
+        if form.validate_on_submit():
+            username = form.username.data
+            user = get_user_with_username(username=username)
+            session['user_id'] = user.id
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)

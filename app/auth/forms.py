@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, EmailField, ValidationError
 from wtforms.validators import InputRequired, Length, EqualTo
+from werkzeug.security import check_password_hash
 from sqlalchemy import select
 
 from .. import db
@@ -33,3 +34,25 @@ class RegisterForm(FlaskForm):
         user_with_email = get_user_with_email(email=field.data)
         if user_with_email:
             raise ValidationError(message='A user with this email already exists.')
+        
+
+class LoginForm(FlaskForm):
+    username = StringField(label='Username*:', validators=[InputRequired(),
+                                                        Length(min=5, max=255)])
+    password = PasswordField(label='Password*:', validators=[InputRequired(),
+                                                             Length(min=8, max=255)])
+
+    def validate_username(self, field):
+        user_with_username = get_user_with_username(username=field.data)
+        if not user_with_username:
+            raise ValidationError(message='This username was not found.')
+        
+    def validate_password(self, field):
+        user_with_username = get_user_with_username(username=self.username.data)
+        if not user_with_username:
+            raise ValidationError(message='This username was not found.')
+        if not check_password_hash(user_with_username.password, field.data):
+            raise ValidationError(message='Wrong password')
+
+    def validate_nothing(self, field):
+        pass
