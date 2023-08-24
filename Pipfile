@@ -11,6 +11,7 @@ flask-migrate = "*"
 python-dotenv = "*"
 flask-wtf = "*"
 pytest = "*"
+email-validator = "*"
 
 [dev-packages]
 autopep8 = "*"
