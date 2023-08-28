@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="container py-5 text-center">
+        <h1>Recommendation: {{ recommendation.title }}</h1>
+        <p>{{ recommendation.short_description }}</p>
+        <p>{{ recommendation.opinion }}</p>
+        <p>{{ recommendation.fiction_type }}</p>
+        <p>{{ recommendation.user }}</p>
+        {% for tag in recommendation.tags %}
+        <p>{{ tag }}</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

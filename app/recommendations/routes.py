@@ -1,11 +1,11 @@
 from typing import Any
-from flask import Blueprint, render_template, request, redirect, url_for, g, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, g, session, flash, abort
 from flask.views import MethodView
 
 from .. import db, login_required
 from ..models import Recommendation, Tag, FictionType, User
 from .forms import PostRecommendationForm
-from .crud import get_fiction_type_by_name, get_tag_by_name
+from .crud import get_fiction_type_by_name, get_tag_by_name, get_recommendation_by_id
 
 bp = Blueprint(
     name='recommendations',
@@ -59,20 +59,27 @@ def get_fiction_type_object(name: str) -> FictionType:
 
 class PostRecommendation(MethodView):
     methods = ['GET', 'POST']
-    decorators = [login_required]
 
     def __init__(self) -> None:
         self.form_class = PostRecommendationForm
         self.template_name = 'recommendations/post_recommendation.html'
         self.success_message = 'You successfully posted new recommendation!'
+        self.info_message = 'To create a recommendation, you need to be an authenticated user.'
 
     def get(self):
+        current_user: User = g.user
+        if not current_user:
+            flash(message=self.info_message, category='info')
+            return redirect(url_for('main.index'))
         form = self.form_class()
         return render_template(self.template_name, form=form)
 
     def post(self):
         form = self.form_class(request.form)
         current_user: User = g.user
+        if not current_user:
+            flash(message=self.info_message, category='info')
+            return redirect(url_for('main.index'))
         if form.validate_on_submit():
             fiction_type = get_fiction_type_object(name=form.fiction_type.data)
             new_recommendation = Recommendation(
@@ -90,3 +97,12 @@ class PostRecommendation(MethodView):
             flash(message=self.success_message, category='success')
             return redirect(url_for('main.index'))
         return render_template(self.template_name, form=form)
+
+
+@bp.route('/recommendations/<int:id>/', methods=['GET'])
+def get_recommendation_detail(id):
+    recommendation = get_recommendation_by_id(id=id)
+    if not recommendation:
+        abort(404)
+
+    return render_template('recommendations/recommendation_detail.html', recommendation=recommendation)
