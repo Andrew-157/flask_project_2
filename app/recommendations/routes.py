@@ -162,3 +162,23 @@ class UpdateRecommendation(MethodView):
             return redirect(url_for('recommendations.recommendation_detail', id=recommendation.id))
         return render_template(self.template_name, form=form,
                                recommendation=recommendation)
+
+
+class DeleteRecommendation(MethodView):
+    decorators = [login_required]
+    methods = ['POST']
+
+    def __init__(self):
+        self.success_message = 'You successfully deleted your recommendation!'
+
+    def post(self, id):
+        current_user: User = g.user
+        recommendation = db.session.get(Recommendation, id)
+        if not recommendation:
+            abort(404)
+        if recommendation.user != current_user:
+            abort(403)
+        db.session.delete(recommendation)
+        db.session.commit()
+        flash(self.success_message, category='success')
+        return redirect(url_for('main.index'))

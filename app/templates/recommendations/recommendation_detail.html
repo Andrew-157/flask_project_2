@@ -11,6 +11,9 @@
         {% for tag in recommendation.tags %}
         <p>{{ tag }}</p>
         {% endfor %}
+        <form action="{{ url_for('recommendations.delete_recommendation', id=recommendation.id) }}" method="POST">
+            <button class="btn btn-danger">Delete</button>
+        </form>
     </div>
 </div>
 {% endblock %}
