@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, g, ses
 from flask.views import MethodView
 from werkzeug.security import generate_password_hash
 
-from .. import db
+from .. import db, login_required
 from ..models import User
 from .forms import RegisterForm, LoginForm, ChangeUserForm
 from .crud import get_user_by_id, get_user_with_username
@@ -12,15 +12,6 @@ from .crud import get_user_by_id, get_user_with_username
 bp = Blueprint(name='auth',
                import_name=__name__,
                url_prefix='/auth')
-
-
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.become_user'))
-        return view(**kwargs)
-    return wrapped_view
 
 
 @bp.before_app_request
