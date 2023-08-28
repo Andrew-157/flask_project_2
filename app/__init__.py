@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from config import config
 from sqlalchemy.orm import DeclarativeBase
 
+
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
@@ -31,6 +32,7 @@ def create_app(config_name: str = 'production'):
 
     from . import models
     from .auth.urls import bp as auth_bp
+    from .recommendations.urls import bp as recommendations_bp
     from .main import routes as main_routes
 
     db.init_app(app)
@@ -38,5 +40,6 @@ def create_app(config_name: str = 'production'):
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_routes.bp)
+    app.register_blueprint(recommendations_bp)
 
     return app

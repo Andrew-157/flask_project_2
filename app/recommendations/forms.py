@@ -1,7 +1,7 @@
 import re
 from flask import g
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, EmailField, ValidationError
+from wtforms import StringField, PasswordField, EmailField, ValidationError, TextAreaField
 from wtforms.validators import InputRequired, Length, EqualTo, Email
 from werkzeug.security import check_password_hash
 from sqlalchemy import select
@@ -9,12 +9,14 @@ from sqlalchemy import select
 
 class PostRecommendationForm(FlaskForm):
     title = StringField(label='Title*:', validators=[InputRequired(),
-                                                     Length(min=5, max=255)])
-    short_description = StringField(label='Short Description*:',
-                                    validators=[InputRequired(),
-                                                Length(min=5)])
-    opinion = StringField(label='Opinion*:', validators=[InputRequired(),
-                                                         Length(min=5)])
+                                                     Length(min=3, max=255)])
+    short_description = TextAreaField(label='Short Description*:',
+                                      validators=[InputRequired(),
+                                                  Length(min=5)])
+    opinion = TextAreaField(label='Opinion*:', validators=[InputRequired(),
+                                                           Length(min=5)])
     fiction_type = StringField(label='Type of fiction*:',
                                validators=[InputRequired(),
-                                           Length(min=5, max=255)])
+                                           Length(min=3, max=255)])
+    tags = StringField(label='Tags:',
+                       validators=[Length(min=3, max=300)])

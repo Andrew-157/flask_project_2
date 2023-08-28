@@ -21,7 +21,7 @@ class User(Base):
     password: Mapped[str] = mapped_column(String(length=300))
 
     recommendations: Mapped[list["Recommendation"]] = relationship(
-        back_populates="fiction_type", cascade="all, delete-orphan"
+        back_populates="user", cascade="all, delete-orphan"
     )
 
     def __repr__(self) -> str:
@@ -36,10 +36,10 @@ class FictionType(Base):
     slug: Mapped[str] = mapped_column(String(length=300), unique=True)
 
     recommendations: Mapped[list["Recommendation"]] = relationship(
-        back_populates="fiction_type", cascade="all, delete-orphan"
+        back_populates="fiction_type", cascade="all, delete-orphan",
     )
 
-    def __repr(self) -> str:
+    def __repr__(self) -> str:
         return self.name
 
 
@@ -47,8 +47,8 @@ tagged_recommendations = Table(
     'tagged_recommendations',
     Base.metadata,
     Column('recommendation_id', ForeignKey(
-        'recommendation.id'), primary_key=True),
-    Column('tag_id', ForeignKey('tag.id'), primary_key=True)
+        'recommendation.id', ondelete='CASCADE'), primary_key=True),
+    Column('tag_id', ForeignKey('tag.id', ondelete='CASCADE'), primary_key=True)
 )
 
 
@@ -65,8 +65,7 @@ class Recommendation(Base):
         DateTime(timezone=True), default=datetime.utcnow())
     updated: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=True)
-    tags: Mapped[list['Tag']] = relationship(secondary=tagged_recommendations,
-                                             cascade="all, delete-orphan")
+    tags: Mapped[list['Tag']] = relationship(secondary=tagged_recommendations)
 
     fiction_type: Mapped[FictionType] = relationship(
         back_populates='recommendations')
@@ -84,7 +83,6 @@ class Tag(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(length=255))
-    slug: Mapped[str] = mapped_column(String(length=300))
 
     def __repr__(self) -> str:
         return self.name

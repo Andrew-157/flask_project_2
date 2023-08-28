@@ -7,4 +7,4 @@ bp.add_url_rule(rule='/register/',
 bp.add_url_rule(rule='/login/',
                 view_func=Login.as_view(name='login'))
 bp.add_url_rule(rule='/update_profile/',
-                view_func=ChangeUser.as_view('change_user'))
+                view_func=ChangeUser.as_view(name='change_user'))
