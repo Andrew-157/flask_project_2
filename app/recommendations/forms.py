@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash
 from sqlalchemy import select
 
 
-class PostRecommendationForm(FlaskForm):
+class PostUpdateRecommendationForm(FlaskForm):
     title = StringField(label='Title*:', validators=[InputRequired(),
                                                      Length(min=3, max=255)])
     short_description = TextAreaField(label='Short Description*:',
@@ -18,5 +18,4 @@ class PostRecommendationForm(FlaskForm):
     fiction_type = StringField(label='Type of fiction*:',
                                validators=[InputRequired(),
                                            Length(min=3, max=255)])
-    tags = StringField(label='Tags:',
-                       validators=[Length(min=3, max=300)])
+    tags = StringField(label='Tags:')
