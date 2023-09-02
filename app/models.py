@@ -47,7 +47,7 @@ tagged_recommendations = Table(
     'tagged_recommendations',
     Base.metadata,
     Column('recommendation_id', ForeignKey(
-        'recommendation.id', ondelete='CASCADE'), primary_key=True),
+        'recommendation.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True),
     Column('tag_id', ForeignKey('tag.id', ondelete='CASCADE'), primary_key=True)
 )
 

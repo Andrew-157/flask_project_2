@@ -26,7 +26,7 @@ def parse_tags(tags: str) -> list[str]:
         elif not tag:
             pass
         else:
-            new_tags_list.append(tag)
+            new_tags_list.append(tag.lower())
 
     for index, tag in enumerate(new_tags_list):
         tag: str = tag.strip()

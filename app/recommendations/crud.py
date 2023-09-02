@@ -21,4 +21,4 @@ def get_recommendation_by_id(id: int) -> Recommendation | None:
         options(joinedload(Recommendation.tags),
                 joinedload(Recommendation.fiction_type),
                 joinedload(Recommendation.user))
-    return db.session.scalar(stmt)
+    return db.session.scalars(stmt).unique().one_or_none()
