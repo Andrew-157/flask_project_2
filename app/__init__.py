@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import config
 from sqlalchemy.orm import DeclarativeBase
+from flask_wtf.csrf import CSRFProtect
 
 
 def login_required(view):
@@ -22,6 +23,7 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(metadata=Base.metadata)
 migrate = Migrate()
+csrf = CSRFProtect()
 
 
 def create_app(config_name: str = 'production'):
@@ -41,5 +43,7 @@ def create_app(config_name: str = 'production'):
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_routes.bp)
     app.register_blueprint(recommendations_bp)
+
+    csrf.init_app(app)
 
     return app

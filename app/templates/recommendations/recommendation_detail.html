@@ -3,17 +3,54 @@
 {% block content %}
 <div class="container py-5">
     <div class="container py-5 text-center">
-        <h1>Recommendation: {{ recommendation.title }}</h1>
-        <p>{{ recommendation.short_description }}</p>
-        <p>{{ recommendation.opinion }}</p>
-        <p>{{ recommendation.fiction_type }}</p>
-        <p>{{ recommendation.user }}</p>
-        {% for tag in recommendation.tags %}
-        <p>{{ tag }}</p>
-        {% endfor %}
-        <form action="{{ url_for('recommendations.delete_recommendation', id=recommendation.id) }}" method="POST">
-            <button class="btn btn-danger">Delete</button>
-        </form>
+        <h1 class="text-center">{{ recommendation.title }}
+            (<a href="" class="text-decoration-none">{{ recommendation.fiction_type.name }}</a>)
+        </h1>
+        <h4 class="text-center text-muted">
+            Recommended by <a href="" class="text-decoration-none">{{ recommendation.user.username }}</a>
+            on <strong>{{ recommendation.published.strftime('%Y-%m-%d') }}</strong>
+            {% if recommendation.updated %} |
+            Updated on <strong>{{ recommendation.updated.strftime('%Y-%m-%d') }}</strong>
+            {% endif %}
+        </h4>
+        {% if g.user == recommendation.user %}
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <a href="{{ url_for('recommendations.update_recommendation', id=recommendation.id) }}"
+                    class="btn btn-primary btn-sm">Update</a>
+            </div>
+            <div class="col-auto">
+                <form action="{{ url_for('recommendations.delete_recommendation', id=recommendation.id) }}"
+                    method="post">
+                    {% if config.WTF_CSRF_ENABLED %}
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    {% endif %}
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        <div class="text-center container py-2">
+            <h4>Short description</h4>
+            <p class="text-break">
+                {{ recommendation.short_description }}
+            </p>
+        </div>
+        <div class="text-center container py-2">
+            <h4>User's opinion</h4>
+            <p class="text-break">
+                {{ recommendation.opinion }}
+            </p>
+        </div>
+        <div class="text-center container py-2">
+            {% for tag in recommendation.tags %}
+            <a href="" class="text-decoration-none">
+                <span class="badge bg-info">
+                    {{ tag }}
+                </span>
+            </a>
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
