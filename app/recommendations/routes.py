@@ -7,7 +7,8 @@ from flask_sqlalchemy import SQLAlchemy
 from .. import db, login_required
 from ..models import Recommendation, Tag, FictionType, User
 from .forms import PostUpdateRecommendationForm
-from .crud import get_fiction_type_by_name, get_tag_by_name, get_recommendation_by_id
+from .crud import get_fiction_type_by_name, get_tag_by_name, get_recommendation_by_id, \
+    get_fiction_type_by_slug, get_recommendations_by_fiction_type_object
 
 bp = Blueprint(
     name='recommendations',
@@ -182,3 +183,15 @@ class DeleteRecommendation(MethodView):
         db.session.commit()
         flash(self.success_message, category='success')
         return redirect(url_for('main.index'))
+
+
+@bp.route('/recommendations/<fiction_type_slug>/', methods=['GET'])
+def get_recommendations_by_fiction_type(fiction_type_slug: str):
+    fiction_type = get_fiction_type_by_slug(
+        fiction_type_slug=fiction_type_slug)
+    if not fiction_type:
+        abort(404)
+    recommendations = get_recommendations_by_fiction_type_object(
+        fiction_type=fiction_type)
+    return render_template('recommendations/recommendations_by_fiction_type.html',
+                           recommendations=recommendations)
