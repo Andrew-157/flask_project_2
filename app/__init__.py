@@ -33,14 +33,14 @@ def create_app(config_name: str = 'production'):
     app.config.from_object(config[config_name])
 
     from . import models
-    from .auth.urls import bp as auth_bp
+    from .users.urls import bp as users_bp
     from .recommendations.urls import bp as recommendations_bp
     from .main import routes as main_routes
 
     db.init_app(app)
     migrate.init_app(app, db)
 
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(users_bp)
     app.register_blueprint(main_routes.bp)
     app.register_blueprint(recommendations_bp)
 

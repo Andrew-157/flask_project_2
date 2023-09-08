@@ -2,7 +2,7 @@ import pytest
 from flask import Flask, Response, g, session
 from werkzeug.security import generate_password_hash
 
-from app.auth.crud import get_user_with_username
+from app.users.crud import get_user_with_username
 from app.models import User
 from app import db
 from .conftest import AuthActions

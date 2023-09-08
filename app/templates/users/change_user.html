@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container py-5">
     <h1 class="text-center">Update Your Profile</h1>
-    <form action="{{ url_for('auth.change_user') }}" method="post">
+    <form action="{{ url_for('users.change_user') }}" method="post">
         {{ form.csrf_token }}
         <div class="mb-3 mt-3">
             {{ form.username.label(class="form-label") }}

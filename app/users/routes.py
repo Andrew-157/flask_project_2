@@ -9,9 +9,8 @@ from ..models import User
 from .forms import RegisterForm, LoginForm, ChangeUserForm
 from .crud import get_user_by_id, get_user_with_username
 
-bp = Blueprint(name='auth',
-               import_name=__name__,
-               url_prefix='/auth')
+bp = Blueprint(name='users',
+               import_name=__name__)
 
 
 @bp.before_app_request
@@ -29,7 +28,7 @@ class Register(MethodView):
 
     def __init__(self) -> None:
         self.form_class = RegisterForm
-        self.template_name = 'auth/register.html'
+        self.template_name = 'users/register.html'
         self.success_message = 'You successfully registered.'
 
     def get(self):
@@ -56,7 +55,7 @@ class Login(MethodView):
 
     def __init__(self) -> None:
         self.form_class = LoginForm
-        self.template_name = 'auth/login.html'
+        self.template_name = 'users/login.html'
         self.success_message = 'Welcome Back!'
 
     def get(self):
@@ -74,7 +73,7 @@ class Login(MethodView):
         return render_template(self.template_name, form=form)
 
 
-@bp.route(rule='/logout/')
+@bp.route(rule='/auth/logout/')
 def logout():
     session.clear()
     flash('You successfully logged out.', category='success')
@@ -87,7 +86,7 @@ class ChangeUser(MethodView):
 
     def __init__(self) -> None:
         self.form_class = ChangeUserForm
-        self.template_name = 'auth/change_user.html'
+        self.template_name = 'users/change_user.html'
         self.success_message = 'You successfully updated your profile.'
 
     def get(self):
@@ -109,6 +108,6 @@ class ChangeUser(MethodView):
         return render_template(self.template_name, form=form)
 
 
-@bp.route(rule='/authenticate/', methods=['GET'])
+@bp.route(rule='/auth/authenticate/', methods=['GET'])
 def become_user():
-    return render_template('auth/become_user.html')
+    return render_template('users/become_user.html')

@@ -9,10 +9,10 @@
             {% if not g.user %}
             <ul class="nav nav-pills justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('users.login') }}">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('auth.register') }}">Register</a>
+                    <a class="nav-link active" href="{{ url_for('users.register') }}">Register</a>
                 </li>
             </ul>
             {% else %}
@@ -21,10 +21,10 @@
                     <a class="nav-link" href="">{{ g.user }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.change_user') }}">Change profile</a>
+                    <a class="nav-link" href="{{ url_for('users.change_user') }}">Change profile</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('auth.logout') }}">Logout</a>
+                    <a class="nav-link active" href="{{ url_for('users.logout') }}">Logout</a>
                 </li>
             </ul>
             {% endif %}
